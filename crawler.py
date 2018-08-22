@@ -28,6 +28,9 @@ def get_profile(username):
     ins_crawler = InsCrawler()
     return ins_crawler.get_user_profile(username)
 
+def get_pull_posts_by_hashtag(tag, number):
+    ins_crawler = InsCrawler()
+    return ins_crawler.get_full_posts_by_tag(tag, number)
 
 def get_posts_by_hashtag(tag, number):
     ins_crawler = InsCrawler()
@@ -83,5 +86,9 @@ if __name__ == '__main__':
         arg_required('tag')
         output(
             get_posts_by_hashtag(args.tag, args.number or 100), args.output)
+    elif args.mode == 'hashtagfull':
+        arg_required('tag')
+        output(
+            get_pull_posts_by_hashtag(args.tag, args.number or 100), args.output)
     else:
         usage()

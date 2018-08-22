@@ -96,7 +96,10 @@ class InsCrawler(Logging):
         url = '%s/explore/tags/%s/' % (InsCrawler.URL, tag)
         self.browser.get(url)
         return self._get_posts(num)
-
+    def get_full_posts_by_tag(self, tag, num):
+        url = '%s/explore/tags/%s/' % (InsCrawler.URL, tag)
+        self.browser.get(url)
+        return self._get_tag_posts(num)
     def auto_like(self, tag='', maximum=1000):
         self.login()
         browser = self.browser
@@ -125,7 +128,11 @@ class InsCrawler(Logging):
         @retry()
         def check_next_post(cur_key):
             ele_a_datetime = browser.find_one('.eo2As .c-Yi7')
-            next_key = ele_a_datetime.get_attribute('href')
+            if ele_a_datetime.get_attribute('href') is None:
+                print("NoneType datetime not found")
+            else:
+                next_key = ele_a_datetime.get_attribute('href')
+
             if cur_key == next_key:
                 raise Exception()
 
@@ -252,4 +259,9 @@ class InsCrawler(Logging):
         print('Done. Fetched %s posts.' % (min(len(posts), num)))
         return posts[:num]
 
+    def _get_tag_posts(self, num):
+        full_posts = self._get_posts_full(num)
 
+        print('Done. Fetched %s posts.' % (min(len(full_posts), num)))
+
+        return full_posts[:num]
